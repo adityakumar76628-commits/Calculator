@@ -1,6 +1,11 @@
 package com.example
 
 import android.os.Bundle
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -32,6 +37,7 @@ import com.example.ui.theme.MyApplicationTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MobileAds.initialize(this) {}
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
@@ -160,6 +166,9 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.End
     ) {
+        AdBanner()
+        Spacer(modifier = Modifier.weight(0.1f))
+        
         // Display
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -260,3 +269,17 @@ fun CalculatorButton(
     }
 }
 
+
+@Composable
+fun AdBanner(modifier: Modifier = Modifier) {
+    AndroidView(
+        modifier = modifier.fillMaxWidth(),
+        factory = { context ->
+            AdView(context).apply {
+                setAdSize(AdSize.BANNER)
+                adUnitId = "ca-app-pub-3940256099942544/6300978111" // Test banner ad unit ID
+                loadAd(AdRequest.Builder().build())
+            }
+        }
+    )
+}
